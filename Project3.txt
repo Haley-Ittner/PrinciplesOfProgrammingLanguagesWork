@@ -1,0 +1,62 @@
+(defn mymerge [left right]
+  "Merges two already sorted lists together and sorts them"
+  (if (= left ())
+    (if (= right ())
+      () ;Both empty
+      right ;left is empty but right isn't
+    )
+      (if (= right ()) ;left not empty
+        left ;left not empty but right is
+        (if (<= (first left) (first right)) ;both not empty
+          (cons (first left) (mymerge (rest left) right)) ;first of left was smaller
+          (cons (first right) (mymerge left (rest right))) ;first right was smaller
+        )
+    )
+  )
+)
+
+(mymerge '(2) '(3 1))
+
+(defn mymergesort [list]
+  "Sorts a list using merge sort"
+  (if (= list ())
+    list
+    (mymerge(cons (first list) ()) (mymergesort (rest list)))
+  )
+)
+(mymergesort '(2 3 1))
+(mymergesort '(3 1 7 5 2 6 4))
+
+(defn myiot [tree]
+  (if (nil? tree)
+    ()
+    (if (list? tree)
+      (mymerge (myiot (first (rest tree)))
+               (cons (first tree)
+                     (myiot (first (rest (rest tree))))))
+      ())))
+
+(myiot '(3 (1 nil nil) (7 (5 nil nil) nil)))
+(myiot '(6 (4 (3 nil nil) (5 nil nil)) (10 (8 (7 nil nil) (9 nil nil)) (11 nil nil))))
+
+(defn mypastri [n k]
+  (if (> k n)
+    nil
+    (if (or (= k n) (= k 0))
+      1
+      (/ (* n (mypastri (- n 1) (- k 1))) k))))
+(mypastri 1000N 500N)
+
+(defn bst_aux [tree lst]
+  (if (or (nil? lst) (empty? lst))
+    tree
+    (if (or (nil? tree) (empty? tree))
+      (bst_aux (list (first lst) nil nil) (rest lst))
+      (if (< (first lst) (first tree))
+        (bst_aux (list (first tree) (bst_aux (first (rest tree)) (list (first lst))) (first (rest (rest tree)))) (rest lst))
+        (bst_aux (list (first tree) (first (rest tree)) (bst_aux (first (rest (rest tree))) (list (first lst)))) (rest lst))))))
+
+(defn mybstbuilder [lst]
+  (bst_aux nil lst))
+
+(mybstbuilder '(3 1 7 5))
